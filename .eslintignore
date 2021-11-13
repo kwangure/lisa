@@ -1,0 +1,15 @@
+# Build folders
+.svelte-kit
+.patootie
+build
+package
+
+# Asset folders
+static
+assets
+
+# Miscellaneous
+node_modules
+
+# `"eslint"` tries to `require` `"@sveltejs/adapter-static"`
+svelte.config.js

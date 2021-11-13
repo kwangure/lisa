@@ -1,0 +1,24 @@
+{
+    "author": "Kafungo Wangure",
+    "description": "Time blocking extension",
+    "keywords": [],
+    "name": "lisa",
+    "scripts": {
+        "dev": "patootie dev",
+        "build": "patootie build"
+    },
+    "version": "0.1.3",
+    "type": "module",
+    "devDependencies": {
+        "@kwangure/eslint-config-svelte": "^0.1.19",
+        "eslint": "^7.32.0",
+        "eslint-import-resolver-alias": "^1.1.2",
+        "patootie": "file:../patootie/patootie-0.0.2-rc.0.tgz"
+    },
+    "dependencies": {
+        "@kwangure/strawberry": "^0.31.0-rc.0",
+        "date-fns": "^2.25.0",
+        "svelte": "^3.44.1",
+        "xstate": "^4.26.0"
+    }
+}
