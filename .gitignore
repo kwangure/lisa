@@ -1,0 +1,12 @@
+# Dependency directories
+node_modules/
+
+# Zip files
+*.tgz
+*.zip
+
+# Output folders
+.patootie/
+build/
+dev/
+dist/
