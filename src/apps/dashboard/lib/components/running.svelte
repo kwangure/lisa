@@ -30,7 +30,13 @@
     });
     $: difference = differenceInMilliseconds(new Date(end), new Date(start));
     $: percent = remaining/difference * 100;
+
+    function preserve_focus(event) {
+        event.returnValue = "Timer is currently running. Close anyway?";
+    }
 </script>
+
+<svelte:window on:beforeunload={preserve_focus}/>
 
 <div class="timer {state}">
     <div class="title">
