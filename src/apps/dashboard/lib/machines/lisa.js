@@ -15,14 +15,18 @@ export default function create_lisa_machine() {
                 entry: (context, event) => {
                     alarm_machine = create_alarm_machine(context, event);
                     alarm_machine.onTransition((state) => {
-                        send("LISA.ALARM_UPDATE", { value: { context: state.context }});
+                        send("UPDATE.ALARM", { value: { context: state.context }});
                     });
                 },
             },
+            transition: {
+
+            },
         },
         on: {
-            "FOCUS": "focus",
-            "LISA.ALARM_UPDATE": {
+            "GOTO.FOCUS": "focus",
+
+            "UPDATE.ALARM": {
                 actions: assign((context, event) => {
                     Object.assign(context.alarm_machine, event.value);
                     return context;
@@ -36,12 +40,12 @@ export default function create_lisa_machine() {
     const lisa_state = readable({ state: value, context }, (set) => {
         lisa_service.onTransition((state) => {
             const { value, context, event } = state;
-            if (event.type !== "LISA.ALARM_UPDATE") return;
+            if (event.type !== "UPDATE.ALARM") return;
             set({ state: value, context });
         });
     });
     return {
         machine_state: lisa_state,
-        focus: (start, end) => send("FOCUS", { value: { start, end }}),
+        focus: (start, end) => send("GOTO.FOCUS", { value: { start, end }}),
     };
 }
