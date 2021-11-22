@@ -5,20 +5,20 @@
 
     export let timer;
 
-    let focusStart = new Date();
-    let focusEnd = addMinutes(focusStart, 80);
+    let focus_start = new Date();
+    let focus_end = addMinutes(focus_start, 80);
 
-    const focus = () => timer.focus(focusStart, focusEnd);
+    const focus = () => timer.focus(focus_start, focus_end);
 </script>
 
 <div class="content">
     <div class="form-item">
-        You've not yet started Lisa. Focus from:
-        <Time bind:value={focusStart} hideLabel>
+        Focus from:
+        <Time bind:value={focus_start} hideLabel>
             <span slot="label">Start focus time</span>
         </Time>
         to
-        <Time bind:value={focusEnd} hideLabel>
+        <Time bind:value={focus_end} hideLabel>
             <span slot="label">End focus time</span>
         </Time>
     </div>
