@@ -13,6 +13,7 @@
 <script>
     import Running from "$lib/components/running.svelte";
     import Setup from "$lib/components/setup.svelte";
+    import Transition from "$lib/components/transition.svelte";
 
     export let timer;
 
@@ -25,6 +26,10 @@
     <Setup {timer}/>
 {:else if lisa_state === "focus"}
     <Running {timer}/>
+{:else if lisa_state === "break"}
+    <Running {timer}/>
+{:else if lisa_state === "transition"}
+    <Transition {timer}/>
 {:else}
     You broke me. What did you do?
 {/if}

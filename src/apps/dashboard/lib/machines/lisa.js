@@ -8,6 +8,8 @@ export default function create_lisa_machine() {
         initial: "setup",
         context: {
             alarm_machine: {},
+            focus_count: 0,
+            previous_phase: null,
         },
         states: {
             setup: {},
@@ -17,14 +19,48 @@ export default function create_lisa_machine() {
                     alarm_machine.onTransition((state) => {
                         send("UPDATE.ALARM", { value: { context: state.context }});
                     });
+                    alarm_machine.onDone(() => {
+                        send("GOTO.TRANSITION");
+                    });
                 },
+                exit: assign({
+                    focus_count: (context) => context.focus_count + 1,
+                    previous_phase: "focus",
+                    next_phase: "break",
+                }),
             },
             transition: {
-
+                on: {
+                    NEXT: [{
+                        target: "focus",
+                        cond: (context) => context.next_phase === "focus",
+                    }, {
+                        target: "break",
+                        cond: (context) => context.next_phase === "break",
+                    }],
+                },
+            },
+            break: {
+                entry: (context, event) => {
+                    alarm_machine = create_alarm_machine(context, event);
+                    alarm_machine.onTransition((state) => {
+                        send("UPDATE.ALARM", { value: { context: state.context }});
+                    });
+                    alarm_machine.onDone(() => {
+                        send("GOTO.TRANSITION");
+                    });
+                },
+                exit: assign({
+                    focus_count: (context) => context.focus_count + 1,
+                    previous_phase: "break",
+                    next_phase: "focus",
+                }),
             },
         },
         on: {
+            "GOTO.BREAK": "break",
             "GOTO.FOCUS": "focus",
+            "GOTO.TRANSITION": "transition",
 
             "UPDATE.ALARM": {
                 actions: assign((context, event) => {
@@ -40,12 +76,16 @@ export default function create_lisa_machine() {
     const lisa_state = readable({ state: value, context }, (set) => {
         lisa_service.onTransition((state) => {
             const { value, context, event } = state;
-            if (event.type !== "UPDATE.ALARM") return;
+            if (
+                !event.type.startsWith("UPDATE.")
+                && !event.type.startsWith("GOTO.")
+            ) return;
             set({ state: value, context });
         });
     });
     return {
         machine_state: lisa_state,
         focus: (start, end) => send("GOTO.FOCUS", { value: { start, end }}),
+        next: (start, end) => send("NEXT", { value: { start, end }}),
     };
 }

@@ -31,6 +31,8 @@
     $: difference = differenceInMilliseconds(new Date(end), new Date(start));
     $: percent = remaining/difference * 100;
 
+    $: title = state[0].toUpperCase() + state.substring(1).toLowerCase();
+
     function preserve_focus(event) {
         event.returnValue = "Timer is currently running. Close anyway?";
     }
@@ -39,9 +41,7 @@
 <svelte:window on:beforeunload={preserve_focus}/>
 
 <div class="timer {state}">
-    <div class="title">
-        Focusing
-    </div>
+    <div class="title">{title}</div>
     <div class="time">
         <Icon path={mdiClockOutline}/> {startTime} - {endTime}
     </div>
@@ -145,12 +145,10 @@
     .timer.focus circle.under {
         stroke: var(--br-blue-light);
     }
-    .timer.shortBreak circle.over,
-    .timer.longBreak circle.over{
+    .timer.break circle.over {
         stroke: var(--br-green);
     }
-    .timer.shortBreak circle.under,
-    .timer.longBreak circle.under{
+    .timer.break circle.under {
         stroke: var(--br-green-light);
     }
 </style>
