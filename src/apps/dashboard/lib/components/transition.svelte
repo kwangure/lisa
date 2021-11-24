@@ -9,9 +9,17 @@
 
     const { machine_state } = timer;
 
+    let phase_start, phase_end;
+
     $: ({ context: { focus_count, next_phase, alarm_machine }} = $machine_state);
-    $: ({ context: { alarm: { end: phase_start }}} = alarm_machine);
-    $: phase_end = addMinutes(phase_start, next_phase === "focus" ? 80 : 10);
+    $: update_phase(next_phase, alarm_machine.context.alarm.end);
+
+    // Perform reactivty based on `next_phase` and alarm_machine` only
+    // Not `phase_start` or `phase_end`
+    function update_phase(next_phase, new_start) {
+        phase_start = new_start;
+        phase_end = addMinutes(new_start, next_phase === "focus" ? 80 : 10);
+    }
 
     const next = () => timer.next(phase_start, phase_end);
 </script>
