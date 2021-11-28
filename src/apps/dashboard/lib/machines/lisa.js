@@ -1,6 +1,8 @@
 import { assign, createMachine, interpret } from "xstate";
+import calm_audio from "../../static/audio/gmail_notification_calm.mp3";
 import create_alarm_machine from "./alarm.js";
 import { readable } from "svelte/store";
+import welcome_audio from "../../static/audio/gmail_notification_welcome.mp3";
 
 export default function create_lisa_machine() {
     let alarm_machine;
@@ -20,6 +22,7 @@ export default function create_lisa_machine() {
                         send("UPDATE.ALARM", { value: { context: state.context }});
                     });
                     alarm_machine.onDone(() => {
+                        (new Audio(welcome_audio)).play();
                         send("GOTO.TRANSITION");
                     });
                 },
@@ -47,6 +50,7 @@ export default function create_lisa_machine() {
                         send("UPDATE.ALARM", { value: { context: state.context }});
                     });
                     alarm_machine.onDone(() => {
+                        (new Audio(calm_audio)).play();
                         send("GOTO.TRANSITION");
                     });
                 },
