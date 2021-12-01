@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "@kwangure/strawberry": "^0.31.0-rc.0",
+        "browser-extension-url-match": "^0.3.3",
         "date-fns": "^2.25.0",
         "svelte": "^3.44.1",
         "xstate": "^4.26.0"

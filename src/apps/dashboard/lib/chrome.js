@@ -13,3 +13,13 @@ export async function focus() {
     await chrome.tabs.update(tab_id, { active: true, highlighted: true });
     await chrome.windows.update(window_id, { focused: true });
 }
+
+/**
+ * Navigate a tab to a url
+ * @param {number} tab_id The unique identifier for the tab
+ * @param {string} url The url to navigate the tab with that id to
+ * @returns {Promise<void>} A promise that resolves when navigation is completed
+ */
+export async function navigate(tab_id, url) {
+    await chrome.tabs.update(tab_id, { url });
+}

@@ -12,7 +12,10 @@ export default {
     patootie: {
         manifest: {
             permissions: [
-                "storage"
+                // Required from `chrome.storage.`
+                "storage",
+                // Required to access URL field in `chrome.tabs.onUpdated` callback
+                "tabs",
             ],
         },
         vite: () => ({
