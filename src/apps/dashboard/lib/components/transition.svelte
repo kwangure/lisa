@@ -12,7 +12,7 @@
     let phase_start, phase_end;
 
     $: ({ context: { focus_count, next_phase, alarm_machine }} = $machine_state);
-    $: update_phase(next_phase, alarm_machine.context.alarm.end);
+    $: update_phase(next_phase, alarm_machine.context?.alarm.end || new Date());
 
     // Perform reactivty based on `next_phase` and alarm_machine` only
     // Not `phase_start` or `phase_end`
@@ -36,8 +36,10 @@
         </Time>
     </div>
     <div class="form-item tip">
-        <Icon path={mdiInformationOutline} size="16" />
-        You have completed {focus_count} focus session(s).
+        {#if focus_count}
+            <Icon path={mdiInformationOutline} size="16" />
+            You have completed {focus_count} focus session(s).
+        {/if}
     </div>
     <div class="form-item">
         <Button primary on:click={next}>

@@ -8,10 +8,11 @@ import welcome_audio from "../../static/audio/gmail_notification_welcome.mp3";
 export default function create_lisa_machine() {
     let alarm_machine;
     const lisa_machine = createMachine({
-        initial: "setup",
+        initial: "transition",
         context: {
             alarm_machine: {},
             focus_count: 0,
+            next_phase: "focus",
             previous_phase: null,
         },
         states: {

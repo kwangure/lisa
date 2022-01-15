@@ -22,9 +22,7 @@
     $: ({ state: lisa_state } = $machine_state);
 </script>
 
-{#if lisa_state === "setup"}
-    <Setup {timer}/>
-{:else if lisa_state === "focus"}
+{#if lisa_state === "focus"}
     <Running {timer}/>
 {:else if lisa_state === "break"}
     <Running {timer}/>
