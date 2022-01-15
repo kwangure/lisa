@@ -12,6 +12,7 @@ export default function create_lisa_machine() {
         context: {
             alarm_machine: {},
             focus_count: 0,
+            break_count: 0,
             next_phase: "focus",
             previous_phase: null,
         },
@@ -59,7 +60,7 @@ export default function create_lisa_machine() {
                     });
                 },
                 exit: assign({
-                    focus_count: (context) => context.focus_count + 1,
+                    break_count: (context) => context.break_count + 1,
                     previous_phase: "break",
                     next_phase: "focus",
                 }),
