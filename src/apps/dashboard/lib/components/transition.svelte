@@ -1,24 +1,55 @@
 <script>
-    import addMinutes from "date-fns/addMinutes";
+    import addMilliseconds from "date-fns/addMilliseconds";
     import Button from "@kwangure/strawberry/components/Button";
+    import differenceInMilliseconds from "date-fns/differenceInMilliseconds";
     import Icon from "@kwangure/strawberry/components/Icon";
     import { mdiInformationOutline } from "@mdi/js";
+    import { persistable } from "storables";
     import Time from "@kwangure/strawberry/components/Input/Time";
 
     export let timer;
 
+    const ONE_SECOND = 1000;
+    const ONE_MINUTE = 60 * ONE_SECOND;
+    const EIGHTY_MINUTES = 80 * ONE_MINUTE;
+    const TEN_MINUTES = 10 * ONE_MINUTE;
+
     const { machine_state } = timer;
 
-    let phase_start, phase_end;
+    const { context: { focus_count, next_phase, alarm_machine }} = $machine_state;
+    const { duration } = persistable({
+        name: "duration",
+        io: {
+            read({ set }) {
+                const storage_value = JSON.parse(localStorage.getItem(`duration-${next_phase}`));
+                const default_value = next_phase === "focus"
+                    ? EIGHTY_MINUTES
+                    : TEN_MINUTES;
 
-    $: ({ context: { focus_count, next_phase, alarm_machine }} = $machine_state);
-    $: update_phase(next_phase, alarm_machine.context?.alarm.end || new Date());
+                set(storage_value || default_value);
+            },
+            write(value, { set }) {
+                localStorage.setItem(`duration-${next_phase}`, JSON.stringify(value));
+                set(value);
+            },
+        },
+    });
 
-    // Perform reactivty based on `next_phase` and alarm_machine` only
-    // Not `phase_start` or `phase_end`
-    function update_phase(next_phase, new_start) {
-        phase_start = new_start;
-        phase_end = addMinutes(new_start, next_phase === "focus" ? 80 : 10);
+    let phase_start = alarm_machine.context
+        ? alarm_machine.context.alarm.end
+        : new Date();
+    let phase_end;
+
+    $: if (phase_start) handle_duration($duration);
+    $: if (phase_end) handle_phase_end(phase_end);
+    $: console.log({ $duration });
+
+    function handle_phase_end(new_end) {
+        $duration = differenceInMilliseconds(new_end, phase_start);
+    }
+
+    function handle_duration(duration) {
+        phase_end = addMilliseconds(phase_start, duration);
     }
 
     const next = () => timer.next(phase_start, phase_end);
