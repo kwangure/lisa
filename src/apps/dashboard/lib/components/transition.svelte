@@ -4,15 +4,14 @@
     import differenceInMilliseconds from "date-fns/differenceInMilliseconds";
     import Icon from "@kwangure/strawberry/components/Icon";
     import { mdiInformationOutline } from "@mdi/js";
+    import minutesToMilliseconds from "date-fns/minutesToMilliseconds";
     import { persistable } from "storables";
     import Time from "@kwangure/strawberry/components/Input/Time";
 
     export let timer;
 
-    const ONE_SECOND = 1000;
-    const ONE_MINUTE = 60 * ONE_SECOND;
-    const EIGHTY_MINUTES = 80 * ONE_MINUTE;
-    const TEN_MINUTES = 10 * ONE_MINUTE;
+    const EIGHTY_MINUTES = minutesToMilliseconds(80);
+    const TEN_MINUTES = minutesToMilliseconds(10);
 
     const { machine_state } = timer;
 
@@ -42,7 +41,6 @@
 
     $: if (phase_start) handle_duration($duration);
     $: if (phase_end) handle_phase_end(phase_end);
-    $: console.log({ $duration });
 
     function handle_phase_end(new_end) {
         $duration = differenceInMilliseconds(new_end, phase_start);
