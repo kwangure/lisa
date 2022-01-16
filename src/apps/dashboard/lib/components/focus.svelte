@@ -18,7 +18,7 @@
     $: if ($patterns.length) {
         chrome.tabs.query({ url: $patterns }, (blocked_tabs) => {
             for (const { id: tab_id, url } of blocked_tabs) {
-                navigate(tab_id, `/dashboard/index.html?url=${url}#!/blocked`);
+                navigate(tab_id, `/dashboard/index.html?url=${encodeURIComponent(url)}#!/blocked`);
             }
         });
     }
