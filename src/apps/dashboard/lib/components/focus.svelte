@@ -7,9 +7,13 @@
     $: matchers = $patterns.map(matchPattern);
 
     function block(tab_id, _, tab) {
+        const { url } = tab;
+        const { searchParams } = new URL(url);
+        if (searchParams.has("lisa-ignore")) return;
+
         for (const pattern of matchers) {
-            if (pattern.match(tab.url)) {
-                navigate(tab_id, `/dashboard/index.html?url=${tab.url}#!/blocked`);
+            if (pattern.match(url)) {
+                navigate(tab_id, `/dashboard/index.html?url=${encodeURIComponent(url)}#!/blocked`);
                 break;
             }
         }
@@ -18,6 +22,8 @@
     $: if ($patterns.length) {
         chrome.tabs.query({ url: $patterns }, (blocked_tabs) => {
             for (const { id: tab_id, url } of blocked_tabs) {
+                const { searchParams } = new URL(url);
+                if (searchParams.has("lisa-ignore")) return;
                 navigate(tab_id, `/dashboard/index.html?url=${encodeURIComponent(url)}#!/blocked`);
             }
         });
