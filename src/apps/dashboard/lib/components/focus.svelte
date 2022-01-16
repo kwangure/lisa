@@ -2,14 +2,9 @@
     import { matchPattern } from "browser-extension-url-match";
     import { navigate } from "../chrome.js";
     import { onDestroy } from "svelte";
+    import { patterns } from "$lib/storage/blocked_patterns.js";
 
-    const blocked_urls = [
-        "*://mail.google.com/*",
-        "*://web.whatsapp.com/*",
-        "*://*.youtube.com/*",
-        "*://twitter.com/*",
-    ];
-    const matchers = blocked_urls.map(matchPattern);
+    $: matchers = $patterns.map(matchPattern);
 
     function block(tab_id, _, tab) {
         for (const pattern of matchers) {
@@ -20,11 +15,13 @@
         }
     }
 
-    chrome.tabs.query({ url: blocked_urls }, (blocked_tabs) => {
-        for (const { id: tab_id, url } of blocked_tabs) {
-            navigate(tab_id, `/dashboard/index.html?url=${url}#!/blocked`);
-        }
-    });
+    $: if ($patterns.length) {
+        chrome.tabs.query({ url: $patterns }, (blocked_tabs) => {
+            for (const { id: tab_id, url } of blocked_tabs) {
+                navigate(tab_id, `/dashboard/index.html?url=${url}#!/blocked`);
+            }
+        });
+    }
 
     chrome.tabs.onUpdated.addListener(block);
 
