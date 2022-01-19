@@ -5,28 +5,40 @@ const default_blocked_urls = [
     {
         name: "Gmail",
         patterns: ["*://mail.google.com/*"],
-        blocked: true,
+        block_during: {
+            focus: true,
+            break: false,
+        },
         blocked_history: [],
         ignored_history: [],
     },
     {
         name: "WhatsApp",
         patterns: ["*://web.whatsapp.com/*"],
-        blocked: true,
+        block_during: {
+            focus: true,
+            break: false,
+        },
         blocked_history: [],
         ignored_history: [],
     },
     {
         name: "YouTube",
         patterns: ["*://*.youtube.com/*"],
-        blocked: true,
+        block_during: {
+            focus: true,
+            break: false,
+        },
         blocked_history: [],
         ignored_history: [],
     },
     {
         name: "Twitter",
         patterns: ["*://twitter.com/*"],
-        blocked: true,
+        block_during: {
+            focus: true,
+            break: false,
+        },
         blocked_history: [],
         ignored_history: [],
     },
