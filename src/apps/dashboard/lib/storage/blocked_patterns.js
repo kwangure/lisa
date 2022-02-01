@@ -1,4 +1,3 @@
-import { derived } from "svelte/store";
 import { persistable } from "storables";
 
 const default_blocked_urls = [
@@ -51,6 +50,8 @@ const blocked_urls_store = persistable({
     name: STORE_NAME,
     io: {
         read({ set }) {
+            set([]);
+
             chrome.storage.local.get(STORE_NAME, (storage) => {
                 if (Object.hasOwnProperty.call(storage, STORE_NAME)) {
                     set(storage[STORE_NAME]);
@@ -62,7 +63,6 @@ const blocked_urls_store = persistable({
             });
 
             function setStorageValue(storage) {
-                console.log("storage changed", { storage });
                 if (storage[STORE_NAME]?.newValue) {
                     set(storage[STORE_NAME].newValue);
                 }
@@ -82,9 +82,6 @@ const blocked_urls_store = persistable({
     },
 });
 
-export const patterns = derived(
-    blocked_urls_store[STORE_NAME],
-    ($blocked_store) => $blocked_store
-        ?.map(({ patterns }) => patterns)
-        .flat() || []
-);
+export { blocked_urls_store };
+
+

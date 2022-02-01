@@ -42,7 +42,7 @@
 <svelte:window on:beforeunload={preserve_focus}/>
 
 {#if state === "focus"}
-    <Focus/>
+    <Focus {start} {end}/>
 {/if}
 
 <div class="timer {state}">
