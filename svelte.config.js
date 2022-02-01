@@ -1,6 +1,9 @@
 import { fileURLToPath } from "url";
 import path from "path";
 
+const MODE = process.env.NODE_ENV;
+const DEV = MODE === "development";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -11,6 +14,7 @@ function resolve(pathname) {
 export default {
     patootie: {
         manifest: {
+            name: DEV ? "Lisa-Dev" : "Lisa",
             permissions: [
                 // Required from `chrome.storage.`
                 "storage",
