@@ -12,7 +12,6 @@
 
 <script>
     import Running from "$lib/components/running.svelte";
-    import Setup from "$lib/components/setup.svelte";
     import Transition from "$lib/components/transition.svelte";
 
     export let timer;
