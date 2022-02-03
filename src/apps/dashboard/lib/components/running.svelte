@@ -1,6 +1,5 @@
 <script>
     import differenceInMilliseconds from "date-fns/differenceInMilliseconds";
-    import Focus from "./focus.svelte";
     import format from "date-fns/format";
     import { formatMilliseconds } from "~@utils/time";
     import Icon from "@kwangure/strawberry/components/Icon";
@@ -40,10 +39,6 @@
 </script>
 
 <svelte:window on:beforeunload={preserve_focus}/>
-
-{#if state === "focus"}
-    <Focus {start} {end}/>
-{/if}
 
 <div class="timer {state}">
     <div class="title">{title}</div>
