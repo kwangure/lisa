@@ -16,7 +16,7 @@
         "patootie": "^0.1.4"
     },
     "dependencies": {
-        "@kwangure/strawberry": "^0.31.0-rc.0",
+        "@kwangure/strawberry": "^0.36.0",
         "browser-extension-url-match": "^0.3.3",
         "date-fns": "^2.25.0",
         "storables": "^0.2.0",

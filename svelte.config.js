@@ -1,5 +1,6 @@
 import { fileURLToPath } from "url";
 import path from "path";
+import { strawberry } from "@kwangure/strawberry/build/vite-plugin-strawberry";
 
 const MODE = process.env.NODE_ENV;
 const DEV = MODE === "development";
@@ -29,6 +30,9 @@ export default {
                     "~@utils": resolve("./src/utils/"),
                 },
             },
+            plugins: [
+                strawberry(),
+            ],
         }),
     },
 };

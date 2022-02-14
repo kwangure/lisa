@@ -1,8 +1,10 @@
 <script>
-    import "@kwangure/strawberry/css/standardDOM";
     import logo from "~@static/images/browser-action.png";
     import Navbar from "@kwangure/strawberry/components/Navbar";
+    import Theme from "@kwangure/strawberry/components/Theme";
 </script>
+
+<Theme/>
 
 <div class="layout">
     <Navbar href="#!/">
