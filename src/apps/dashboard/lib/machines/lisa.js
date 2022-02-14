@@ -63,17 +63,7 @@ export default function create_lisa_machine() {
                     }),
                 ],
             },
-            transition: {
-                on: {
-                    NEXT: [{
-                        target: "focus",
-                        cond: (context) => context.next_phase === "focus",
-                    }, {
-                        target: "break",
-                        cond: (context) => context.next_phase === "break",
-                    }],
-                },
-            },
+            transition: {},
             break: {
                 entry: "create_alarm_machine",
                 exit: assign({
@@ -112,7 +102,7 @@ export default function create_lisa_machine() {
                 const { patterns, alarm_machine } = context;
 
                 let start, end;
-                if (event.type === "NEXT") {
+                if (event.type.startsWith("GOTO.")) {
                     ({ start, end } = event.value);
                 } else {
                     ({ start, end } = alarm_machine.context.alarm);
@@ -188,6 +178,8 @@ export default function create_lisa_machine() {
 
     return {
         machine_state: lisa_state,
-        next: (start, end) => send("NEXT", { value: { start, end }}),
+        goto: (phase, start, end) => send(`GOTO.${phase.toUpperCase()}`, {
+            value: { start, end },
+        }),
     };
 }

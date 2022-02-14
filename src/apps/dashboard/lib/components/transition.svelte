@@ -1,4 +1,5 @@
 <script>
+    import Select, { Option } from "@kwangure/strawberry/components/Select";
     import addMilliseconds from "date-fns/addMilliseconds";
     import Button from "@kwangure/strawberry/components/Button";
     import differenceInMilliseconds from "date-fns/differenceInMilliseconds";
@@ -7,6 +8,7 @@
     import minutesToMilliseconds from "date-fns/minutesToMilliseconds";
     import { persistable } from "storables";
     import Time from "@kwangure/strawberry/components/Input/Time";
+    import { writable } from "svelte/store";
 
     export let timer;
 
@@ -14,21 +16,27 @@
     const TEN_MINUTES = minutesToMilliseconds(10);
 
     const { machine_state } = timer;
-
     const { context: { focus_count, next_phase, alarm_machine }} = $machine_state;
+    const scheduled_phase = writable(next_phase);
     const { duration } = persistable({
         name: "duration",
         io: {
             read({ set }) {
-                const storage_value = JSON.parse(localStorage.getItem(`duration-${next_phase}`));
-                const default_value = next_phase === "focus"
-                    ? EIGHTY_MINUTES
-                    : TEN_MINUTES;
+                const unsubscribe = scheduled_phase.subscribe((phase) => {
+                    const storage_value = JSON.parse(localStorage.getItem(`duration-${phase}`));
+                    const default_value = phase === "focus"
+                        ? EIGHTY_MINUTES
+                        : TEN_MINUTES;
 
-                set(storage_value || default_value);
+                    set(storage_value || default_value);
+                });
+
+                return () => {
+                    unsubscribe();
+                };
             },
             write(value, { set }) {
-                localStorage.setItem(`duration-${next_phase}`, JSON.stringify(value));
+                localStorage.setItem(`duration-${$scheduled_phase}`, JSON.stringify(value));
                 set(value);
             },
         },
@@ -50,18 +58,23 @@
         phase_end = addMilliseconds(phase_start, duration);
     }
 
-    const next = () => timer.next(phase_start, phase_end);
+    const next = () => timer.goto($scheduled_phase, phase_start, phase_end);
 </script>
 
 <div class="content">
     <div class="form-item">
-        Run {next_phase} from
+        Run
+        <Select hideLabel bind:value={$scheduled_phase}>
+            <Option value={"focus"}>Focus</Option>
+            <Option value={"break"}>Break</Option>
+        </Select>
+        from
         <Time bind:value={phase_start} hideLabel>
-            <span slot="label">{next_phase} start time</span>
+            <span slot="label">{$scheduled_phase} start time</span>
         </Time>
         to
         <Time bind:value={phase_end} hideLabel>
-            <span slot="label">{next_phase} end time</span>
+            <span slot="label">{$scheduled_phase} end time</span>
         </Time>
     </div>
     <div class="form-item tip">
@@ -72,7 +85,7 @@
     </div>
     <div class="form-item">
         <Button primary on:click={next}>
-            Start {next_phase}
+            Start {$scheduled_phase}
         </Button>
     </div>
 </div>
